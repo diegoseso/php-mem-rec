@@ -1,0 +1,15 @@
+{
+    "name": "diegoseso/php-mem-rec",
+    "description": "php-mem-rec helps you analize xdebug.trace profiling files, fast using awk language but without getting your hands dirty",
+    "keywords": ["parser", "xdebug", "profiling"],
+    "type": "unix command",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Diego Sosa",
+            "email": "diego.venezuela@gmail.com"
+        }
+    ],
+    "require-dev": {
+    }
+}
