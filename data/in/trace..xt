@@ -1,0 +1,10 @@
+Version: 2.2.5
+File format: 2
+TRACE START [2016-02-24 22:09:01]
+1	0	0	0.000206	216928	{main}	1		Command line code	0
+2	1	0	0.000473	217024	ini_get_all	0		Command line code	1
+2	1	1	0.001230	242760
+1	0	1	0.001714	218016
+			0.001869	8288
+TRACE END   [2016-02-24 22:09:01]
+
