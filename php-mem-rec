@@ -1,0 +1,62 @@
+#! /bin/bash
+
+# Get an XDebug file and parse it into a easier to loop kind of file by 
+# precalculating the amount of memory per function instead of depending
+# on previous function value  
+
+inputFile='';
+RETURN=false;
+COUNT=$#
+function paramChecking()
+{
+    # It should be change for a real param checking that could handle 
+    # several options, for more information, please check the TODO.md
+    echo 'paramChecking'
+
+    if [ $# = 1 ]; then
+        inputFile=$1
+        RETURN=true
+        return
+    fi
+    RETURN=false
+}
+
+function memoryTransform() 
+{
+    # checking file exists an is readable
+    # check the file is a valid XDebug format file        
+    # Make the parsing of the file
+    # Return the values
+    echo 'memoryTransform';
+}
+
+function checkFile()
+{
+    # If file exists check readability 
+    # If it is readable return true 
+    # return false
+    echo 'checkFile';
+}
+
+function checkXDebugFormnat()
+{
+    # If line indicating that XDebug trace exists 
+    # If next line has X numbers of fields 
+        # return true 
+    # return false
+    echo 'checkXDebugFormat';
+}
+
+function parseFile()
+{
+    # Awk enter's the room 
+    # We need an algorithm that allows to easily reformat the memory to be independent and absolute
+    # not a relative count that depends on previous amount of memory used.
+    echo 'parseFile';
+}
+
+paramChecking $COUNT
+if $RETURN; then 
+    memoryTransform
+fi
+
