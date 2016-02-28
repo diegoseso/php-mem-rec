@@ -6,21 +6,18 @@
 
 RETURN=false;
 COUNT=$#
-echo $COUNT
+# echo $COUNT
 
 function paramChecking()
 {
     # It should be change for a real param checking that could handle 
     # several options, for more information, please check the TODO.md
-    echo 'paramChecking'
-    echo $#
+    # echo 'paramChecking'
     if [ $COUNT = 1 ]; then
         inputFile="$1"
-        echo "InputFile $inputFile"
         RETURN=true
         return
     fi
-    echo "false";
     RETURN=false
 }
 
@@ -29,7 +26,7 @@ function checkFile()
     # If file exists check readability 
     # If it is readable return true 
     # return false 
-    echo 'checkFile';
+    #echo 'checkFile';
 
     if [[ -e  $1 ]]; then 
         if [[ -r $1 ]]; then
@@ -44,7 +41,7 @@ function checkFile()
 
 function checkXDebugFormat()
 {
-    echo 'checkXDebugFormat';
+    # echo 'checkXDebugFormat';
    
     # If line indicating that XDebug trace exists 
     # If next line has X numbers of fields 
@@ -60,19 +57,23 @@ function checkXDebugFormat()
 
 function parseFile()
 {
-    echo 'parseFile';
+    # echo 'parseFile';
+    
+    # Determine the number of lines in the file 
+
+    NLINE=$(wc -l $1 | cut -d ' ' -f 1)
+    
     # Awk enter's the room 
     # We need the fastest and simplest algorithm that allows to easily reformat the memory to be independent and absolute
     # not a relative count that depends on previous amount of memory used.
-         
     # As a first approach it will output it via stdout
-    awk 'BEGIN{ base_memory=0; used_memory=0;}(NR>=$4){print $4-$base_memory; $base_memory=$4; }' $1
+    awk -v lines=$NLINE 'BEGIN{ FS="\t";base_memory=0;}(FNR>=4 && FNR < lines-1){ print FNR,$4-base_memory,$6; base_memory=$4; }' $1
 
 }
 
 function memoryTransform() 
 {
-    echo 'memoryTransform';
+    #echo 'memoryTransform';
     # checking file exists an is readable
     checkFile $inputFile
     # check the file is a valid XDebug format file        
