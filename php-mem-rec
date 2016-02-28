@@ -4,59 +4,89 @@
 # precalculating the amount of memory per function instead of depending
 # on previous function value  
 
-inputFile='';
 RETURN=false;
 COUNT=$#
+echo $COUNT
+
 function paramChecking()
 {
     # It should be change for a real param checking that could handle 
     # several options, for more information, please check the TODO.md
     echo 'paramChecking'
-
-    if [ $# = 1 ]; then
-        inputFile=$1
+    echo $#
+    if [ $COUNT = 1 ]; then
+        inputFile="$1"
+        echo "InputFile $inputFile"
         RETURN=true
         return
     fi
+    echo "false";
     RETURN=false
-}
-
-function memoryTransform() 
-{
-    # checking file exists an is readable
-    # check the file is a valid XDebug format file        
-    # Make the parsing of the file
-    # Return the values
-    echo 'memoryTransform';
 }
 
 function checkFile()
 {
     # If file exists check readability 
     # If it is readable return true 
-    # return false
+    # return false 
     echo 'checkFile';
+
+    if [[ -e  $1 ]]; then 
+        if [[ -r $1 ]]; then
+            RETURN=true
+            return
+        fi
+        echo 'You dont have readability permissions'
+    fi
+    echo 'The file does not exists'
+    RETURN=false
 }
 
-function checkXDebugFormnat()
+function checkXDebugFormat()
 {
+    echo 'checkXDebugFormat';
+   
     # If line indicating that XDebug trace exists 
     # If next line has X numbers of fields 
         # return true 
     # return false
-    echo 'checkXDebugFormat';
+
+    RETURN=$(awk '{if(FNR==1) if ($0~/^Version/) print "true"; else print "false";}' $1)
+    if ! $RETURN; then return; fi 
+    RETURN=$(awk '{if(FNR==2) if ($0=="File format: 2") print "true"; else print "false";}' $1)
+    if ! $RETURN; then return; fi 
+    RETURN=$(awk '{if(FNR==3) if ($0~/^TRACE START /) print "true"; else print "false";}' $1)
 }
 
 function parseFile()
 {
-    # Awk enter's the room 
-    # We need an algorithm that allows to easily reformat the memory to be independent and absolute
-    # not a relative count that depends on previous amount of memory used.
     echo 'parseFile';
+    # Awk enter's the room 
+    # We need the fastest and simplest algorithm that allows to easily reformat the memory to be independent and absolute
+    # not a relative count that depends on previous amount of memory used.
+         
+    # As a first approach it will output it via stdout
+    awk 'BEGIN{ base_memory=0; used_memory=0;}(NR>=$4){print $4-$base_memory; $base_memory=$4; }' $1
+
 }
 
-paramChecking $COUNT
+function memoryTransform() 
+{
+    echo 'memoryTransform';
+    # checking file exists an is readable
+    checkFile $inputFile
+    # check the file is a valid XDebug format file        
+    if ! $RETURN; then return; fi
+    checkXDebugFormat $inputFile
+    # Make the parsing of the file
+    if ! $RETURN; then return; fi
+    parseFile $inputFile
+    # Return the values
+}
+
+paramChecking $1
 if $RETURN; then 
-    memoryTransform
+    memoryTransform 
+    exit 0;
 fi
 
