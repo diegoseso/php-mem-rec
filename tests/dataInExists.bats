@@ -2,6 +2,6 @@
 
 #checking that the data folder exists
 @test "Check that the data/in folder exists" {
-     run stat ../data/in
+     run stat $BATS_TEST_DIRNAME/../data/in
      [ $status = 0 ] 
 }
